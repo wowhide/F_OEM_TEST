@@ -15,7 +15,7 @@
 //定数
 //Smartyテンプレートインクルードパス
 /*Xサーバーでサブドメインの場合*/
-define('SMARTY_TEMP_PATH', '../../folder_app_ms-dev/application/smarty/');
+define('SMARTY_TEMP_PATH', '../../folder_app_ms-flora/application/smarty/');
 /**/
 /*サブドメインでない場合
 define('SMARTY_TEMP_PATH', '../application/smarty/');
@@ -23,7 +23,7 @@ define('SMARTY_TEMP_PATH', '../application/smarty/');
 
 //法要アプリ故人データフォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('APP_DATA_PATH','../../folder_app_ms-dev/deceased_data/');
+define('APP_DATA_PATH','../../folder_app_ms-flora/deceased_data/');
 /**/
 /*サブドメインでない場合
 define('APP_DATA_PATH','../deceased_data/');
@@ -31,7 +31,7 @@ define('APP_DATA_PATH','../deceased_data/');
 
 //法要アプリバックアップデータフォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('APP_BACKUP_PATH','../../folder_app_ms-dev/backup_data/');
+define('APP_BACKUP_PATH','../../folder_app_ms-flora/backup_data/');
 /**/
 /*サブドメインでない場合
 define('APP_BACKUP_PATH','../backup_data/');
@@ -39,7 +39,7 @@ define('APP_BACKUP_PATH','../backup_data/');
 
 //法要アプリ通知情報画像一時フォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('NOTICE_IMG_TEMP_PATH','../../folder_app_ms-dev/notice_info_temp_image/');
+define('NOTICE_IMG_TEMP_PATH','../../folder_app_ms-flora/notice_info_temp_image/');
 /**/
 /*サブドメインでない場合
 define('NOTICE_IMG_TEMP_PATH','../notice_info_temp_image/');
@@ -47,7 +47,7 @@ define('NOTICE_IMG_TEMP_PATH','../notice_info_temp_image/');
 
 //法要アプリ通知情報画像フォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('NOTICE_IMG_PATH','../../folder_app_ms-dev/notice_info_image/');
+define('NOTICE_IMG_PATH','../../folder_app_ms-flora/notice_info_image/');
 /**/
 /*サブドメインでない場合
 define('NOTICE_IMG_PATH','../notice_info_image/');
@@ -55,7 +55,7 @@ define('NOTICE_IMG_PATH','../notice_info_image/');
 
 //法要アプリ故人画像一時フォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('DECEASED_DATA_TEMP_PATH','../../folder_app_ms-dev/deceased_temp_data/');
+define('DECEASED_DATA_TEMP_PATH','../../folder_app_ms-flora/deceased_temp_data/');
 /**/
 /*サブドメインでない場合
 define('DECEASED_DATA_TEMP_PATH','../deceased_temp_data/');
@@ -63,7 +63,7 @@ define('DECEASED_DATA_TEMP_PATH','../deceased_temp_data/');
 
 //法要アプリ故人画像フォルダパス
 /*Xサーバーでサブドメインの場合*/
-define('DECEASED_DATA_PATH','../../folder_app_ms-dev/deceased_data/');
+define('DECEASED_DATA_PATH','../../folder_app_ms-flora/deceased_data/');
 /**/
 /*サブドメインでない場合
 define('DECEASED_DATA_PATH','../deceased_data/');
@@ -79,7 +79,7 @@ define('LIBRARY_PATH','../library/');
 
 //PDFパス
 /*Xサーバーでサブドメインの場合*/
-define('PDF_PATH','../../folder_app_ms-dev/pdf/');
+define('PDF_PATH','../../folder_app_ms-flora/pdf/');
 /**/
 /*サブドメインでない場合
 define('PDF_PATH','../pdf/');
