@@ -9,9 +9,9 @@ define('INVALID', 'InvalidRegistration');
 define('UNREGISTERED', 'NotRegistered');
 
 // 本番環境DB
-define('DSN',     'mysql:dbname=photocube_dev;host=mysql23a.xserver.jp');
-define('DB_USER', 'photocube_dev');
-define('DB_PASS', 'Cs3fd323');
+define('DSN',     'mysql:dbname=hyamato_flora;host=mysql1010.xserver.jp');
+define('DB_USER', 'hyamato_flora');
+define('DB_PASS', 'wow2784497');
 
 class AndroidPushNotifier {
     public function push() {

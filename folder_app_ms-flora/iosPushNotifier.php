@@ -5,9 +5,9 @@ class iosPushNotifier {
 
     public function push(){
         //本番環境DB
-        $dsn    = 'mysql:dbname=photocube_dev;host=mysql23a.xserver.jp';
-        $dbuser = 'photocube_dev';
-        $dbpass = 'Cs3fd323';
+        $dsn    = 'mysql:dbname=hyamato_flora;host=mysql1010.xserver.jp';
+        $dbuser = 'hyamato_flora';
+        $dbpass = 'wow2784497';
 
         try
         {
@@ -26,7 +26,7 @@ class iosPushNotifier {
 
             //無効なデバイストークンを取得する
             // $feedback = new ApnsPHP_Feedback(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox.pem');
-            $feedback = new ApnsPHP_Feedback(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox_aoki.pem');
+            $feedback = new ApnsPHP_Feedback(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox.pem');
             $feedback->setRootCertificationAuthority('certificates_dev/entrust_root_certification_authority.pem');
             $feedback->connect();
             $results = $feedback->receive();
@@ -62,7 +62,7 @@ class iosPushNotifier {
 
             //Push通知準備
             // $push = new ApnsPHP_Push(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox.pem');
-            $push = new ApnsPHP_Push(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox_aoki.pem');
+            $push = new ApnsPHP_Push(ApnsPHP_Abstract::ENVIRONMENT_SANDBOX, 'certificates_dev/server_certificates_sandbox.pem');
             $push->setRootCertificationAuthority('certificates_dev/entrust_root_certification_authority.pem');
             $push->connect();
 
