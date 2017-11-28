@@ -60,6 +60,21 @@ define('NOTICE_LIST_NUMBER', 15);
 define('NOTICE_TEMPNO_DEATHDAY', 1);
 //通知情報　法要で検索時のテンプレート番号
 define('NOTICE_TEMPNO_EVENT', 2);
+//通知情報　初七日法要のテンプレート番号
+define('NOTICE_TEMPNO_SEVENTH_DEATHDAY', 3);
+//通知情報　二七日法要のテンプレート番号
+define('NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY', 4);
+//通知情報　三七日法要のテンプレート番号
+define('NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY', 5);
+//通知情報　四七日法要のテンプレート番号
+define('NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY', 6);
+//通知情報　五七日法要のテンプレート番号
+define('NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY', 7);
+//通知情報　六七日法要のテンプレート番号
+define('NOTICE_TEMPNO_FORTYTWO_DEATHDAY', 8);
+//通知情報　四十九日法要のテンプレート番号
+define('NOTICE_TEMPNO_FORTYNINE_DEATHDAY', 9);
+
 //故人様一覧1ページの表示件数
 define('DECEASED_LIST_NUMBER', 25);
 //ログ種別
@@ -324,7 +339,584 @@ class MngController extends Zend_Controller_Action
         $this->dispEntryNoticeInfo("");
         echo $this->_view->render('mng_notice_info_entry.tpl');
     }
-    
+
+
+    //通知情報登録画面表示(追善法要)
+    public function dispentrynoticeinfodayafterdeathAction()
+    {
+        if ($this->chkSession() === false) {
+            //ログインしていない場合またはセッションタイムアウトした場合、ログイン画面を表示
+            return $this->_forward('disprelogin');
+        }
+
+        //GET値から法要通知種類を取得
+        $noticeTypeNo = $this->getRequest()->getQuery('ntype');
+
+        //通知登録の有無を調べる
+        $noticeInfoList = $this->_mngModel->getNoticeInfodayafterdeathEntryList($noticeTypeNo);
+
+        if ($noticeInfoList) {
+            //登録済みの場合
+                // //通知情報登録画面表示
+                // $this->dispEntryNoticeInfo("");
+                // echo $this->_view->render('mng_notice_hoyo_info_edit.tpl');
+
+                //POST値から通知Noを取得
+                    //通知情報を取得
+                    $noticeInfo = $this->_mngModel->getNoticeHoyoInfo($noticeTypeNo);
+
+                    //セッションに画像のパスを設定
+                    $this->_session->image_path = NOTICE_IMG_PATH . $noticeInfo['notice_info_no'] . '.jpg';
+
+                    //通知情報編集画面表示
+                    if(empty($noticeInfo) === false){
+                        $this->dispEntryNoticeHoyoInfo($noticeInfo['notice_type'],"", $noticeInfo);
+                        $this->_view->noticeInfoNo = $noticeInfo['notice_info_no'];
+                        echo $this->_view->render('mng_notice_hoyo_info_edit.tpl');
+                    }else{
+                        echo $this->_view->render('mng_error.tpl');
+                    }
+        }else{
+            //登録未の場合
+                //通知情報登録画面表示
+                $this->dispEntryNoticeHoyoInfo($noticeTypeNo,"");
+                echo $this->_view->render('mng_notice_hoyo_info_entry.tpl');
+        }
+    }
+
+    /**
+     * 通知情報登録画面表示処理(定期通知：追善法要)
+     * ：通知情報登録画面を表示する
+     * @param string    $message    エラーメッセ―ジ
+     * @param array     $noticeInfo 通知情報
+     */
+
+    private function dispEntryNoticeHoyoInfo($noticeType, $message, array $noticeInfo = null){
+
+        //メッセージをviewに設定
+        $this->_view->message = $message;
+        if (is_null($noticeInfo)) {
+            //viewを設定
+            $this->_view->noticeTitle    = "";
+
+            switch ($noticeType) {
+                case 7:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_SEVENTH_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_SEVENTH_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "初七日法要";
+                    $this->_view->noticeTypeNumber  = 7;
+
+                    break;
+
+                case 14:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "二七日法要";
+                    $this->_view->noticeTypeNumber  = 14;
+
+                    break;
+
+                case 21:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "三七日法要";
+                    $this->_view->noticeTypeNumber  = 21;
+
+                    break;
+
+                case 28:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "四七日法要";
+                    $this->_view->noticeTypeNumber  = 28;
+                    break;
+
+                case 35:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "五七日法要";
+                    $this->_view->noticeTypeNumber  = 35;
+                    break;
+
+                case 42:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYTWO_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_FORTYTWO_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "六七日法要";
+                    $this->_view->noticeTypeNumber  = 42;
+                    break;
+
+                case 49:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYNINE_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId        = NOTICE_TEMPNO_FORTYNINE_DEATHDAY;
+                    $this->_view->noticeTypeTitle   = "四十九日法要";
+                    $this->_view->noticeTypeNumber  = 49;
+                    break;
+            }
+
+            $this->_view->noticeText     = "";
+            $this->_view->imageExistenceFlg = 0;
+            $this->_view->url = "";
+        } else {
+            //キャッシュ対策日時
+            $date = new Zend_Date();
+
+            switch ($noticeType) {
+                case 7:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_SEVENTH_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_SEVENTH_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "初七日法要";
+                    $this->_view->noticeTypeNumber  = 7;
+                    break;
+
+                case 14:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "二七日法要";
+                    $this->_view->noticeTypeNumber  = 14;
+                    break;
+
+                case 21:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "三七日法要";
+                    $this->_view->noticeTypeNumber  = 21;
+                    break;
+
+                case 28:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "四七日法要";
+                    $this->_view->noticeTypeNumber  = 28;
+                    break;
+
+                case 35:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "五七日法要";
+                    $this->_view->noticeTypeNumber  = 35;
+                    break;
+
+                case 42:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYTWO_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_FORTYTWO_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "六七日法要";
+                    $this->_view->noticeTypeNumber  = 42;
+                    break;
+
+                case 49:
+                    $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYNINE_DEATHDAY);
+                    $this->_view->template = common::makeTemplate($template['template_text'],
+                                                                  '[お名前]',
+                                                                  '',
+                                                                  '');
+                    $this->_view->templateId = NOTICE_TEMPNO_FORTYNINE_DEATHDAY;
+                    $this->_view->noticeTypeTitle = "四十九日法要";
+                    $this->_view->noticeTypeNumber  = 49;
+                    break;
+            }
+
+            $this->_view->noticeTitle = $noticeInfo['notice_title'];
+            $this->_view->noticeText = $noticeInfo['notice_text'];
+            $this->_view->imageExistenceFlg = $noticeInfo['image_existence_flg'];
+            $this->_view->cacheKey = $date->get("yyyyMMddHHmmss");
+            $this->_view->url = $noticeInfo['url'];
+            //画像が設定してある場合、画像の幅高さを取得してviewに設定する
+            if ($noticeInfo['image_existence_flg'] == IMAGE_EXISTENCE_FLG_YES) {
+                $this->_view->imgWH = $this->getImageSizeAttr($this->_session->image_path);
+            }
+        }
+    }
+
+
+    //通知情報登録確認画面表示(定期通知：追善法要)
+    public function confentrynoticehoyoinfoAction()
+    {
+        if ($this->chkSession() === false) {
+            //ログインしていない場合またはセッションタイムアウトした場合、ログイン画面を表示
+            return $this->_forward('disprelogin');
+        }
+
+        if($this->getRequest()->getPost('back')) {
+            //戻るボタン押下の場合は通知情報一覧画面に戻る
+            return $this->dispnoticeinfolistAction();
+        }
+
+        $this->confNoticeHoyoInfo('mng_notice_hoyo_info_entry.tpl', 'mng_notice_hoyo_info_entry_conf.tpl');
+    }
+
+
+        //通知情報登録確認画面表示処理
+    private function confNoticeHoyoInfo($inputpage_tpl, $confpage_tpl)
+    {
+        //入力値を取得
+        $noticeInfo = array(
+            'notice_type'         => $this->getRequest()->getPost('notice_type'),
+            'notice_schedule'     => $this->getRequest()->getPost('notice_schedule'),
+            'entry_method'        => 1,
+            'notice_title'        => $this->getRequest()->getPost('notice_title'),
+            'template_id'         => $this->getRequest()->getPost('template_id'),
+            'notice_text'         => $this->getRequest()->getPost('notice_text'),
+            'image_existence_flg' => $this->getRequest()->getPost('image_existence_flg'),
+            'url'                 => $this->getRequest()->getPost('url')
+        );
+
+        $noticeInfoNo = $this->getRequest()->getPost('notice_info_no');
+        if(!is_null($noticeInfoNo)) $noticeInfo['notice_info_no'] = $noticeInfoNo;
+
+        //画像が選択されている場合、一時フォルダに保存
+        if (is_uploaded_file($_FILES["notice_image"]["tmp_name"])) {
+            //選択されている場合、フラグを1にする
+            $noticeInfo['image_existence_flg'] = IMAGE_EXISTENCE_FLG_YES;
+            //一時保存用ファイル名を生成し、既にファイルが存在しないか重複チェック
+            do {
+                //一時保存用ファイル名を生成
+                $fileName = comEncryption::getRandomString() . ".jpg";
+                $uploadFile = NOTICE_IMG_TEMP_PATH . $fileName;
+            } while(file_exists($uploadFile));
+            //一時フォルダに保存
+            //800×800に収まるように画像を作成
+            //サーバ版
+            exec('/usr/bin/convert -define jpeg:size=800x800 -resize 800x800 ' . $_FILES['notice_image']['tmp_name'] . ' ' .  $uploadFile);
+            //パーミッションを変更
+            chmod($uploadFile, 0644);
+            //ファイルパスをセッションに設定
+            $this->_session->image_path = $uploadFile;
+        }
+        //入力値チェック
+        $message = $this->checkNoticeHoyoInfo($noticeInfo);
+        //ファイルアップロードチェック
+        $message = $message . $this->checkNoticeImage();
+        if (comValidate::chkNotEmpty($message) === false) {
+            //入力値が正しい場合、確認画面を表示する
+            //入力値をセッションに設定
+            $this->_session->notice_info = $noticeInfo;
+
+            //キャッシュ対策日時
+            $date = new Zend_Date();
+            //viewを設定
+            switch ($noticeInfo['notice_type']) {
+                case 7:
+                    $this->_view->noticeTypeTitle = "初七日法要";
+                    break;
+                case 14:
+                    $this->_view->noticeTypeTitle = "二七日法要";
+                    break;
+                case 21:
+                    $this->_view->noticeTypeTitle = "三七日法要";
+                    break;
+                case 28:
+                    $this->_view->noticeTypeTitle = "四七日法要";
+                    break;
+                case 35:
+                    $this->_view->noticeTypeTitle = "五七日法要";
+                    break;
+                case 42:
+                    $this->_view->noticeTypeTitle = "六七日法要";
+                    break;
+                case 49:
+                    $this->_view->noticeTypeTitle = "四十九日法要";
+                    break;
+            }
+
+            $this->_view->entryMethod    = 1;
+            $this->_view->noticeTitle    = $noticeInfo['notice_title'];
+            $this->_view->noticeText     = $noticeInfo['notice_text'];
+            $this->_view->template          = $this->getTemplateString($noticeInfo);
+            $this->_view->templateId        = $noticeInfo['template_id'];
+            $this->_view->imageExistenceFlg = $noticeInfo['image_existence_flg'];
+            $this->_view->cacheKey          = $date->get("yyyyMMddHHmmss");
+            $this->_view->url               = $noticeInfo['url'];
+            //画像が設定してある場合、画像の幅高さを取得してviewに設定する
+            if ($noticeInfo['image_existence_flg'] == IMAGE_EXISTENCE_FLG_YES) {
+                $this->_view->imgWH = $this->getImageSizeAttr($this->_session->image_path);
+            }
+
+            // ワンタイムトークンを発行し、セッションとフォームに設定
+            $this->_session->key = session_id() . '_' . microtime();
+            $this->_view->token = comToken::get_token($this->_session->key);
+
+            //確認画面を表示
+            echo $this->_view->render($confpage_tpl);
+        } else {
+            //入力値に不正がある場合、メッセージ、入力値を設定して入力画面に戻る
+            $this->dispEntryNoticeHoyoInfo($this->getRequest()->getPost('template_id'), $message, $noticeInfo);
+            echo $this->_view->render($inputpage_tpl);
+        }
+    }
+
+   //通知情報登録完了画面表示(定期通知：追善法要)
+    public function compentrynoticehoyoinfoAction()
+    {
+        if ($this->chkSession() === false) {
+            //ログインしていない場合またはセッションタイムアウトした場合、ログイン画面を表示
+            return $this->_forward('disprelogin');
+        }
+
+        //セッションから入力値を取得
+        $noticeInfo = $this->_session->notice_info;
+
+        // 押されたボタンを判定する
+        if ($this->getRequest()->getPost('back')) {              //戻るボタンの場合
+            // 利用申し込み画面表示
+            $this->dispEntryNoticeHoyoInfo($noticeInfo['template_id'],"", $noticeInfo);
+            echo $this->_view->render('mng_notice_hoyo_info_entry.tpl');
+            return;
+        } elseif ($this->getRequest()->getPost('entry')) {       //登録ボタンの場合
+            // ワンタイムトークンが正しいかチェックする
+            if (comToken::check_token($this->getRequest()->getPost('token'), $this->_session->key) === false) {
+                // エラー画面を表示
+                echo $this->_view->render('mng_error.tpl');
+                exit();
+            }
+
+            // セッション内のワンタイムトークを削除する
+            if (isset($this->_session->key) === true) {
+                unset($this->_session->key);
+            }
+
+            //DBに通知情報を保存
+            if ($this->_mngModel->insertNoticeHoyoInfo($noticeInfo)) {
+                //画像を選択している場合、一時フォルダから正式なフォルダに移動する
+                if ($noticeInfo['image_existence_flg'] == IMAGE_EXISTENCE_FLG_YES) {
+                    //今追加した通知情報の通知情報Noを取得する
+                    $noticeInfoNo = $this->_mngModel->getLastNoticeInfoNo();
+                    //一時フォルダの仮アップ画像を画像フォルダに移動
+                    $imagePath = NOTICE_IMG_PATH . $noticeInfoNo['notice_info_no'] . '.jpg';
+                    if (rename($this->_session->image_path, $imagePath)) {
+                        //移動できたらセッションの画像パスに移動先のパスを指定
+                        $this->_session->image_path = $imagePath;
+                    } else {
+                        echo "ファイルを移動出来ませんでした。";
+                    }
+                }
+
+                $this->compNoticeInfo($noticeInfo);
+
+                //ログ出力
+                $this->_logModel->recordLog(LOG_KIND_NOTICE_ENTRY, $this->_session->manager_id, "Success", $this->_httpHeaderInfo);
+                //完了画面を表示
+                echo $this->_view->render('mng_notice_hoyo_info_entry_comp.tpl');
+            } else {
+                //ログ出力
+                $this->_logModel->recordLog(LOG_KIND_NOTICE_ENTRY, $this->_session->manager_id, "Failure", $this->_httpHeaderInfo);
+                //DB保存エラーの場合、エラー画面を表示
+                echo $this->_view->render('mng_error.tpl');
+            }
+        }
+    }
+
+
+    //通知情報編集確認画面表示（追善法要）
+    public function confeditnoticehoyoinfoAction() {
+        if ($this->chkSession() === false) {
+            //ログインしていない場合またはセッションタイムアウトした場合、ログイン画面を表示
+            return $this->_forward('disprelogin');
+        }
+
+        $this->_view->noticeInfoNo = $this->getRequest()->getPost('notice_info_no');
+        $this->confNoticeHoyoInfo('mng_notice_hoyo_info_edit.tpl', 'mng_notice_hoyo_info_edit_conf.tpl');
+    }
+
+    //通知情報編集確認画面表示(追善法要)
+    public function compeditnoticehoyoinfoAction() {
+        if ($this->chkSession() === false) {
+            //ログインしていない場合またはセッションタイムアウトした場合、ログイン画面を表示
+            return $this->_forward('disprelogin');
+        }
+
+        //セッションから入力値を取得
+        $noticeInfo = $this->_session->notice_info;
+        // 押されたボタンを判定する
+        if ($this->getRequest()->getPost('back')) {              //戻るボタンの場合
+            //通知情報編集画面表示
+            $this->dispEntryNoticeHoyoInfo($noticeInfo['notice_type'],"", $noticeInfo);
+            $this->_view->noticeInfoNo = $noticeInfo['notice_info_no'];
+            echo $this->_view->render('mng_notice_hoyo_info_edit.tpl');
+        } elseif ($this->getRequest()->getPost('edit')) {        //編集ボタンの場合
+            // ワンタイムトークンが正しいかチェックする
+            if (comToken::check_token($this->getRequest()->getPost('token'), $this->_session->key) === false) {
+                // エラー画面を表示
+                echo $this->_view->render('mng_error.tpl');
+                exit();
+            }
+
+            // セッション内のワンタイムトークを削除する
+            if (isset($this->_session->key) === true) {
+                unset($this->_session->key);
+            }
+
+            //DBに通知情報を保存
+            if ($this->_mngModel->updateNoticeHoyoInfo($noticeInfo)) {
+                $imagePath = NOTICE_IMG_PATH . $noticeInfo['notice_info_no'] . '.jpg';
+
+                if ($noticeInfo['image_existence_flg'] == IMAGE_EXISTENCE_FLG_YES) {
+                    //画像を選択している場合、一時フォルダから正式なフォルダに移動する
+                    //一時フォルダの仮アップ画像を画像フォルダに移動
+                    if (rename($this->_session->image_path, $imagePath)) {
+                        //移動できたらセッションの画像パスに移動先のパスを指定
+                        $this->_session->image_path = $imagePath;
+                    } else {
+                        echo "ファイルを移動出来ませんでした。";
+                    }
+                } else {
+                    //画像を選択していない場合、ファイルが存在する場合、削除する
+                    if (file_exists($imagePath)) {
+                        //ファイルが存在する場合、削除する
+                        unlink($imagePath);
+                    }
+                }
+
+                $this->compNoticeHoyoInfo($noticeInfo);
+
+                //お知らせ番号設定
+                $this->_view->noticeInfoNo = $noticeInfo['notice_info_no'];
+                //ログ出力
+                $this->_logModel->recordLog(LOG_KIND_NOTICE_EDIT, $this->_session->manager_id, "Success", $this->_httpHeaderInfo);
+                //完了画面を表示
+                echo $this->_view->render('mng_notice_hoyo_info_edit_comp.tpl');
+            } else {
+                //ログ出力
+                $this->_logModel->recordLog(LOG_KIND_NOTICE_EDIT, $this->_session->manager_id, "Failure", $this->_httpHeaderInfo);
+                //DB保存エラーの場合、エラー画面を表示
+                echo $this->_view->render('mng_error.tpl');
+            }
+        }
+    }
+
+    //通知情報登録完了画面表示処理
+    private function compNoticeHoyoInfo($noticeInfo)
+    {
+        //キャッシュ対策日時
+        $date = new Zend_Date();
+        //viewを設定
+        switch ($noticeInfo['notice_type']) {
+            case 7:
+                $this->_view->noticeTypeTitle = "初七日法要";
+                $this->_view->noticeTypeNumber  = 7;
+                break;
+            case 14:
+                $this->_view->noticeTypeTitle = "二七日法要";
+                $this->_view->noticeTypeNumber  = 14;
+                break;
+            case 21:
+                $this->_view->noticeTypeTitle = "三七日法要";
+                $this->_view->noticeTypeNumber  = 21;
+                break;
+            case 28:
+                $this->_view->noticeTypeTitle = "四七日法要";
+                $this->_view->noticeTypeNumber  = 28;
+                break;
+            case 35:
+                $this->_view->noticeTypeTitle = "五七日法要";
+                $this->_view->noticeTypeNumber  = 35;
+                break;
+            case 42:
+                $this->_view->noticeTypeTitle = "六七日法要";
+                $this->_view->noticeTypeNumber  = 42;
+                break;
+            case 49:
+                $this->_view->noticeTypeTitle = "四十九日法要";
+                $this->_view->noticeTypeNumber  = 49;
+                break;
+        }
+
+        $this->_view->entryMethod       = 1;
+        $this->_view->noticeTitle       = $noticeInfo['notice_title'];
+        $this->_view->template          = $this->getTemplateString($noticeInfo);
+        $this->_view->templateId        = $noticeInfo['template_id'];
+        $this->_view->noticeText        = $noticeInfo['notice_text'];
+        $this->_view->imageExistenceFlg = $noticeInfo['image_existence_flg'];
+        $this->_view->cacheKey          = $date->get("yyyyMMddHHmmss");
+        $this->_view->url               = $noticeInfo['url'];
+        //画像が設定してある場合、画像の幅高さを取得してviewに設定する
+        if ($noticeInfo['image_existence_flg'] == IMAGE_EXISTENCE_FLG_YES) {
+            $this->_view->imgWH = $this->getImageSizeAttr($this->_session->image_path);
+        }
+    }
+
+    /**
+     * 通知情報チェック
+     * ：通知情報が正しいかチェックするメソッド
+     * @param   array   通知情報
+     * @return  string  正しい場合空文字、不正な場合エラーメッセージ
+     */
+    private function checkNoticeHoyoInfo(array $noticeInfo)
+    {
+        $message = "";          //エラーメッセージ格納用
+        //タイトル
+        //入力されているか
+        if (comValidate::chkNotEmpty($noticeInfo['notice_title']) === false) {
+            $message = $message . "・タイトルが入力されていません。<br>";
+        }
+
+        //入力されているか
+        if (comValidate::chkNotEmpty($noticeInfo['notice_text']) === false) {
+            $message = $message . "・本文が入力されていません。<br>";
+        }
+
+        //URL
+        //URLが入力されている場合、入力形式が正しいか
+        if (comValidate::chkNotEmpty($noticeInfo['url']) &&
+            comValidate::chkUrl($noticeInfo['url']) === false) {
+            $message = $message . "・URLの入力形式が正しくありません。<br>";
+        }
+
+        return $message;
+    }
+
+
     /**
      * 通知情報登録画面表示処理
      * ：通知情報登録画面を表示する
@@ -2627,9 +3219,11 @@ class MngController extends Zend_Controller_Action
                     'password' => $this->_config->inquiry_mail->inquiry_password,
                     'fromName' => $this->_config->inquiry_mail->inquiry_name,
                     'fromMail' => $this->_config->inquiry_mail->inquiry_mail,
-                    'toName' => 'qr@wow.ne.jp',
-                    'toMail' => 'qr@wow.ne.jp',
-                    'subject' => '法要アプリQRコード受注のお知らせ',
+                    // 'toName' => 'qr@wow.ne.jp',
+                    // 'toMail' => 'qr@wow.ne.jp',
+                    'toName' => 'yamayamato8@gmail.com',
+                    'toMail' => 'yamayamato8@gmail.com',                    
+                    'subject' => '通知テストアプリQRコード受注のお知らせ',
                     'body' => $body
                 );
 
@@ -2760,6 +3354,56 @@ class MngController extends Zend_Controller_Action
                                                  $name,
                                                  $noticeInfo['memorial_month'],
                                                  $this->_memorialEvent[$noticeInfo['memorial_event']]);
+        //初七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_SEVENTH_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_SEVENTH_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+        //二七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FOURTEENDAY_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+        //三七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYONEDAY_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+        //四七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_TWENTYEIGHT_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+
+        //五七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_THIRTYFIVE_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+        //六七日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_FORTYTWO_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYTWO_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
+        //四十九日法要
+        }elseif($noticeInfo['template_id'] == NOTICE_TEMPNO_FORTYNINE_DEATHDAY) {
+            $template = $this->_mngModel->getTemplate(NOTICE_TEMPNO_FORTYNINE_DEATHDAY);
+            $templateText = common::makeTemplate($template['template_text'],
+                                                 $name,
+                                                 "",
+                                                 "");
         }
 
         return $templateText;

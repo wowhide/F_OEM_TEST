@@ -655,38 +655,362 @@ class CooperationController extends Zend_Controller_Action
 
         // 通知情報配列を取得
         $cooperationModel = new cooperationModel();
-        $arrayNoticeInfo  = $cooperationModel->getNoticeInfoDeliveredByToken($deviceToken);
+        //法要通知情報が配信されているか
+        //六日前
+        $arrayNoticeHoyoInfo_SixDaysAgo             = $cooperationModel->getNoticeHoyoInfoSixdayagoDeliveredByToken($deviceToken);
+        //十三日前
+        $arrayNoticeHoyoInfo_ThirteenDaysAgo        = $cooperationModel->getNoticeHoyoInfoThirteendayagoDeliveredByToken($deviceToken);
+        //二十日前
+        $arrayNoticeHoyoInfo_TwentyDaysAgo          = $cooperationModel->getNoticeHoyoInfoTwentydayagoDeliveredByToken($deviceToken);
+        //二十七日前
+        $arrayNoticeHoyoInfo_TwentysevenDaysAgo     = $cooperationModel->getNoticeHoyoInfoTwentysevendayagoDeliveredByToken($deviceToken);
+        //三十四日前
+        $arrayNoticeHoyoInfo_ThirtyfourDaysAgo      = $cooperationModel->getNoticeHoyoInfoThirtyfourdayagoDeliveredByToken($deviceToken);
+        //四十一日前
+        $arrayNoticeHoyoInfo_FortyoneDaysAgo        = $cooperationModel->getNoticeHoyoInfoFortyonedayagoDeliveredByToken($deviceToken);        
+         //四十八前
+        $arrayNoticeHoyoInfo_FortyeightDaysAgo      = $cooperationModel->getNoticeHoyoInfoFortyeightdayagoDeliveredByToken($deviceToken);         
+        //お知らせ
+        $arrayNoticeInfoNotice  = $cooperationModel->getNoticeInfoDeliveredByToken($deviceToken);
+
+        // //配列をマージ
+        $arrayNoticeInfo = array_merge( $arrayNoticeHoyoInfo_SixDaysAgo, 
+                                        $arrayNoticeHoyoInfo_ThirteenDaysAgo,
+                                        $arrayNoticeHoyoInfo_TwentyDaysAgo,
+                                        $arrayNoticeHoyoInfo_TwentysevenDaysAgo,
+                                        $arrayNoticeHoyoInfo_ThirtyfourDaysAgo,
+                                        $arrayNoticeHoyoInfo_FortyoneDaysAgo,
+                                        $arrayNoticeHoyoInfo_FortyeightDaysAgo,
+                                        $arrayNoticeInfoNotice);
 
         // 通知情報が存在する場合は通知情報を返し、ない場合は空文字を返す
+        $noticeInfoData = array();
         if (count($arrayNoticeInfo) > 0) {
             // URLの配列をJSON形式のデータに変換
-            $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeInfo($arrayNoticeInfo));
-            $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
-            echo $jNoticeInfoData;
-        } else {
-            echo '';
+            $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeHoyoInfo($arrayNoticeInfo,$deviceToken));
+        } 
+
+        if (count($noticeInfoData) > 0) {
+                $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
+                echo $jNoticeInfoData;
+        }else{
+                echo '';
         }
+
     }
+
+
+    private function adjustNoticeHoyoInfo($arrayNoticeInfo,$deviceToken) {
+        $adjusted = array();
+        $cooperationModel = new cooperationModel();
+
+        foreach ($arrayNoticeInfo as $noticeInfo) {
+
+            //初七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '77777777') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],7);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //二七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '14141414') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],14);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //三七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '21212121') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],21);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //四七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '28282828') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],28);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //五七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '35353535') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],35);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //六七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '42424242') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],42);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            //四十九日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfo['notice_schedule'] == '49494949') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$noticeInfo['deceased_id'],49);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfo['notice_schedule'] = $pushTime;
+                }
+                $noticeInfo['search_category'] = 5;
+                $adjusted[] = $noticeInfo;
+                continue;
+            }
+
+            $adjusted[] = $noticeInfo;
+
+        }
+        return $adjusted;
+    }
+
 
     //配信済みの通知情報をレジストレーションIDを元に取得
     public function getnoticeinfodeliveredbyregidAction() {
-        // デバイストークンを取得
+        // レジストレーションIDを取得
         $registrationID = $this->getRequest()->getPost('registrationID');
 
         // 通知情報配列を取得
         $cooperationModel = new cooperationModel();
-        $arrayNoticeInfo  = $cooperationModel->getNoticeInfoDeliveredByRegID($registrationID);
+        //法要通知情報が配信されているか
+        //六日前
+        $arrayNoticeHoyoInfo_SixDaysAgo = $cooperationModel->getNoticeHoyoInfoSixdayagoDeliveredByregid($registrationID);
+        //十三日前
+        $arrayNoticeHoyoInfo_ThirteenDaysAgo        = $cooperationModel->getNoticeHoyoInfoThirteendayagoDeliveredByregid($registrationID);
+        //二十日前
+        $arrayNoticeHoyoInfo_TwentyDaysAgo          = $cooperationModel->getNoticeHoyoInfoTwentydayagoDeliveredByregid($registrationID);
+        //二十七日前
+        $arrayNoticeHoyoInfo_TwentysevenDaysAgo     = $cooperationModel->getNoticeHoyoInfoTwentysevendayagoDeliveredByregid($registrationID);
+        //三十四日前
+        $arrayNoticeHoyoInfo_ThirtyfourDaysAgo      = $cooperationModel->getNoticeHoyoInfoThirtyfourdayagoDeliveredByregid($registrationID);
+        //四十一日前
+        $arrayNoticeHoyoInfo_FortyoneDaysAgo        = $cooperationModel->getNoticeHoyoInfoFortyonedayagoDeliveredByregid($registrationID);        
+         //四十八前
+        $arrayNoticeHoyoInfo_FortyeightDaysAgo      = $cooperationModel->getNoticeHoyoInfoFortyeightdayagoDeliveredByregid($registrationID);  
+        //お知らせ
+        $arrayNoticeInfoNotice          = $cooperationModel->getNoticeInfoDeliveredByRegID($registrationID);
+
+        //配列をマージ
+        $arrayNoticeInfo = array_merge( $arrayNoticeHoyoInfo_SixDaysAgo, 
+                                        $arrayNoticeHoyoInfo_ThirteenDaysAgo,
+                                        $arrayNoticeHoyoInfo_TwentyDaysAgo,
+                                        $arrayNoticeHoyoInfo_TwentysevenDaysAgo,
+                                        $arrayNoticeHoyoInfo_ThirtyfourDaysAgo,
+                                        $arrayNoticeHoyoInfo_FortyoneDaysAgo,
+                                        $arrayNoticeHoyoInfo_FortyeightDaysAgo,
+                                        $arrayNoticeInfoNotice);
 
         // 通知情報が存在する場合は通知情報を返し、ない場合は空文字を返す
         if (count($arrayNoticeInfo) > 0) {
             // URLの配列をJSON形式のデータに変換
-            $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeInfo($arrayNoticeInfo));
+            $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeHoyoInfoRegid($arrayNoticeInfo,$registrationID));
             $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
             echo $jNoticeInfoData;
         } else {
             echo '';
         }
+
     }
+
+
+    private function adjustNoticeHoyoInfoRegid($arrayNoticeInfo,$registrationID) {
+        $adjusted = array();
+        $cooperationModel = new cooperationModel();
+
+        foreach ($arrayNoticeInfo as $noticeInfoList) {
+
+            //初七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '77777777') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],7);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //二七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '14141414') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],14);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //三七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '21212121') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],21);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //四七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '28282828') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],28);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //五七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '35353535') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],35);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //六七日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '42424242') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],42);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            //四十九日通知情報取得　-> 日付を「notice_schedule」を法要日に設定
+            if ($noticeInfoList['notice_schedule'] == '49494949') 
+            {
+                $arrayNoticeTypeSeventh  = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registrationID,$noticeInfoList['deceased_id'],49);
+                $pushTime = "";
+                foreach ( $arrayNoticeTypeSeventh as $notice) {
+                   $pushTime = $notice['push_time'];
+                }
+
+                if (strlen($pushTime) > 0) {
+                    $noticeInfoList['notice_schedule'] = $pushTime;
+                }
+                $noticeInfoList['search_category'] = 5;
+                $adjusted[] = $noticeInfoList;
+                continue;
+            }
+
+            $adjusted[] = $noticeInfoList;
+
+        }
+        return $adjusted;
+    }
+
 
     private function adjustNoticeInfo($arrayNoticeInfo) {
         $adjusted = array();
@@ -803,11 +1127,87 @@ class CooperationController extends Zend_Controller_Action
         $deviceToken    = $this->getRequest()->getPost('deviceToken');
 
         $cooperationModel = new cooperationModel();
-        $arrayNoticeInfo  = $cooperationModel->getNoticeInfoAndDeceasedID($noticeSchedule, $deviceToken);
 
+
+        //配信日付取得
+        $DeliveryDate = "";
+
+        //初七日の場合
+        if ($noticeSchedule == '77777777') {
+            // 6日前
+        $DeliveryDate = date('Ymd', strtotime('-6 day', time()));
+        }
+
+        //二七日の場合
+        if ($noticeSchedule == '14141414') {
+            // 14日前
+        $DeliveryDate = date('Ymd', strtotime('-13 day', time()));
+        }
+
+        //三七日の場合
+        if ($noticeSchedule == '21212121') {
+            // 20日前
+        $DeliveryDate = date('Ymd', strtotime('-20 day', time()));
+        }
+
+        //四七日の場合
+        if ($noticeSchedule == '28282828') {
+            // 27日前
+        $DeliveryDate = date('Ymd', strtotime('-27 day', time()));
+        }
+
+        //五七日の場合
+        if ($noticeSchedule == '35353535') {
+            // 34日前
+        $DeliveryDate = date('Ymd', strtotime('-34 day', time()));
+        }
+
+        //六七日の場合
+        if ($noticeSchedule == '42424242') {
+            // 41日前
+        $DeliveryDate = date('Ymd', strtotime('-41 day', time()));
+        }
+        
+        //四十九日の場合
+        if ($noticeSchedule == '49494949') {
+            // 48日前
+        $DeliveryDate = date('Ymd', strtotime('-48 day', time()));
+        }
+
+
+        //法要通知の場合
+        if ($noticeSchedule == '77777777'||
+            $noticeSchedule == '14141414'||
+            $noticeSchedule == '21212121'||
+            $noticeSchedule == '28282828'||
+            $noticeSchedule == '35353535'||
+            $noticeSchedule == '42424242'||
+            $noticeSchedule == '49494949'
+            ) {
+            $arrayNoticeInfo  = $cooperationModel->getNoticeHoyoInfoAndDeceasedID($noticeSchedule,$deviceToken,$DeliveryDate);
+        //お知らせ通知の場合
+        }else{
+            $arrayNoticeInfo  = $cooperationModel->getNoticeInfoAndDeceasedID($noticeSchedule, $deviceToken);
+        }
+        
         if (count($arrayNoticeInfo) > 0) {
-            $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeInfo($arrayNoticeInfo));
-            $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
+            //法要通知の場合
+            if ($noticeSchedule == '77777777'||
+                $noticeSchedule == '14141414'||
+                $noticeSchedule == '21212121'||
+                $noticeSchedule == '28282828'||
+                $noticeSchedule == '35353535'||
+                $noticeSchedule == '42424242'||
+                $noticeSchedule == '49494949'
+                ) {
+                    $noticeInfoData  = array('noticeInfo' => $arrayNoticeInfo);
+                    $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
+            //お知らせの場合
+            }else{
+                    $noticeInfoData  = array('noticeInfo' => $this->adjustNoticeInfo($arrayNoticeInfo));
+                    $jNoticeInfoData = Zend_Json::encode($noticeInfoData);
+            }
+
             echo $jNoticeInfoData;
         } else {
             echo '';
@@ -854,11 +1254,40 @@ class CooperationController extends Zend_Controller_Action
         if ($cooperationModel->checkDeviceToken($deviceToken, $deceasedId) == false) {
             //存在しない場合保存する
             if ($cooperationModel->insertDeviceToken($deviceToken, $deceasedId)) {
-                echo 'OK';
+
+                //故人情報取得
+                $deceased = $cooperationModel->getDeceased($deceasedId);
+                //故人没年月日をDate型に変換
+                $deceasedDeathday = date("Y-m-d",strtotime($deceased['deceased_deathday']));
+                //多次元連想配列に値を代入
+                $noticetypeList[] = array('noticetype'=>7,  'pushtime'=>'+6 day');
+                $noticetypeList[] = array('noticetype'=>14, 'pushtime'=>'+13 day');
+                $noticetypeList[] = array('noticetype'=>21, 'pushtime'=>'+20 day');
+                $noticetypeList[] = array('noticetype'=>28, 'pushtime'=>'+27 day');
+                $noticetypeList[] = array('noticetype'=>35, 'pushtime'=>'+34 day');
+                $noticetypeList[] = array('noticetype'=>42, 'pushtime'=>'+41 day');
+                $noticetypeList[] = array('noticetype'=>49, 'pushtime'=>'+48 day');
+                //法要スケジュールをＤＢに格納処理
+                foreach ($noticetypeList as $hoyonoticeinfo) {
+                    if ($cooperationModel->insertHoyoNoticeschedule($deviceToken, 
+                                                                    $deceasedId, 
+                                                                    $hoyonoticeinfo['noticetype'], 
+                                                                    date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                    {
+                    }else{
+                        //データ格納に失敗した場合
+                        echo '';
+                        break;
+                    }
+
+                }
+
+                // echo 'OK';
             } else {
                 echo '';
             }
         } else {
+
             echo 'OK';
         }
     }
@@ -887,7 +1316,35 @@ class CooperationController extends Zend_Controller_Action
         
         if(!$is_exist) {
             //データベースに未登録の場合は登録
-            $cooperationModel->insertRegistrationID($registration, $deceasedId);
+            if ($cooperationModel->insertRegistrationID($registration, $deceasedId)) {
+                //故人情報取得
+                $deceased = $cooperationModel->getDeceased($deceasedId);
+                //故人没年月日をDate型に変換
+                $deceasedDeathday = date("Y-m-d",strtotime($deceased['deceased_deathday']));
+                //多次元連想配列に値を代入
+                $noticetypeList[] = array('noticetype'=>7,  'pushtime'=>'+6 day');
+                $noticetypeList[] = array('noticetype'=>14, 'pushtime'=>'+13 day');
+                $noticetypeList[] = array('noticetype'=>21, 'pushtime'=>'+20 day');
+                $noticetypeList[] = array('noticetype'=>28, 'pushtime'=>'+27 day');
+                $noticetypeList[] = array('noticetype'=>35, 'pushtime'=>'+34 day');
+                $noticetypeList[] = array('noticetype'=>42, 'pushtime'=>'+41 day');
+                $noticetypeList[] = array('noticetype'=>49, 'pushtime'=>'+48 day');
+                //法要スケジュールをＤＢに格納処理
+                foreach ($noticetypeList as $hoyonoticeinfo) {
+                    if ($cooperationModel->insertHoyoNoticescheduleRegistId($registration, 
+                                                                            $deceasedId, 
+                                                                            $hoyonoticeinfo['noticetype'], 
+                                                                            date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                            {
+                    }else{
+                        //データ格納に失敗した場合
+                        echo '';
+                        break;
+                    }
+
+                }
+
+            }
         }
     }
 
