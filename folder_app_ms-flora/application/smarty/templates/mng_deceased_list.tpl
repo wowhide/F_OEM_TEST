@@ -28,7 +28,7 @@
 
 <div id="search">
 <form method="get" action="../mng/dispdeceasedsearch">
-    発注日　&nbsp;&nbsp;&nbsp;&nbsp;
+    発注日　&nbsp;&nbsp;&nbsp;
     <!-- 発注日From -->
     <input id="datepickerFrom" type="text" name="search_from" value="{$searchFrom}" readonly="readonly" placeholder="From" />
     ～
@@ -36,7 +36,7 @@
     <input id="datepickerTo" type="text" name="search_to" value="{$searchTo}" readonly="readonly" placeholder="To" />
    <br /> <br />
     <!-- 故人名 -->   
-    故人名　&nbsp;&nbsp;&nbsp;&nbsp;
+    故人名　&nbsp;&nbsp;&nbsp;
     <input type="text" name="search_deceased_name" value="{$searchDeceasedName}" placeholder="故人名" />
     &nbsp;&nbsp;&nbsp;&nbsp;入力の際、苗字と名前の間は<span style="color:red;">半角スペース</span>を空けてください。
     <br /><br />
