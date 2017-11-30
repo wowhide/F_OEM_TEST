@@ -1278,21 +1278,44 @@ class CooperationController extends Zend_Controller_Action
                 $noticetypeList[] = array('noticetype'=>35, 'pushtime'=>'+34 day');
                 $noticetypeList[] = array('noticetype'=>42, 'pushtime'=>'+41 day');
                 $noticetypeList[] = array('noticetype'=>49, 'pushtime'=>'+48 day');
-                //法要スケジュールをＤＢに格納処理
-                foreach ($noticetypeList as $hoyonoticeinfo) {
-                    if ($cooperationModel->insertHoyoNoticeschedule($deviceToken, 
-                                                                    $deceasedId, 
-                                                                    $hoyonoticeinfo['noticetype'], 
-                                                                    date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
-                                                                    {
-                    }else{
-                        //データ格納に失敗した場合
-                        echo '';
-                        break;
-                    }
 
+                //法要スケジュール(初七日)が登録されているか
+                $isHoyoNoticeschedule = $cooperationModel->getNoticeHoyoInfoDeliveredDay($deviceToken,$deceasedId,7);
+                
+                if (is_array($isHoyoNoticeschedule) && !empty($isHoyoNoticeschedule)) {
+                //法要スケジュール（初七日）登録済みの場合
+                    //法要スケジュールをＤＢに格納処理（アップデート）
+                    foreach ($noticetypeList as $hoyonoticeinfo) {
+                        if ($cooperationModel->updateHoyoNoticeschedule($deviceToken, 
+                                                                        $deceasedId, 
+                                                                        $hoyonoticeinfo['noticetype'], 
+                                                                        date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                        {
+                        }else{
+                            //データ更新に失敗した場合
+                            echo '';
+                            break;
+                        }
+
+                    } 
+
+                }else{
+                //法要スケジュール（初七日）未登録の場合
+                    //法要スケジュールをＤＢに格納処理（インサート）
+                    foreach ($noticetypeList as $hoyonoticeinfo) {
+                        if ($cooperationModel->insertHoyoNoticeschedule($deviceToken, 
+                                                                        $deceasedId, 
+                                                                        $hoyonoticeinfo['noticetype'], 
+                                                                        date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                        {
+                        }else{
+                            //データ格納に失敗した場合
+                            echo '';
+                            break;
+                        }
+
+                    } 
                 }
-
                 // echo 'OK';
             } else {
                 echo '';
@@ -1340,20 +1363,44 @@ class CooperationController extends Zend_Controller_Action
                 $noticetypeList[] = array('noticetype'=>35, 'pushtime'=>'+34 day');
                 $noticetypeList[] = array('noticetype'=>42, 'pushtime'=>'+41 day');
                 $noticetypeList[] = array('noticetype'=>49, 'pushtime'=>'+48 day');
-                //法要スケジュールをＤＢに格納処理
-                foreach ($noticetypeList as $hoyonoticeinfo) {
-                    if ($cooperationModel->insertHoyoNoticescheduleRegistId($registration, 
-                                                                            $deceasedId, 
-                                                                            $hoyonoticeinfo['noticetype'], 
-                                                                            date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
-                                                                            {
-                    }else{
-                        //データ格納に失敗した場合
-                        echo '';
-                        break;
-                    }
 
+                //法要スケジュール(初七日)が登録されているか
+                $isHoyoNoticeschedule = $cooperationModel->getNoticeHoyoInfoDeliveredDayRegstID($registration,$deceasedId,7);
+
+                if (is_array($isHoyoNoticeschedule) && !empty($isHoyoNoticeschedule)) {
+                //法要スケジュール（初七日）登録済みの場合
+                    //法要スケジュールをＤＢに格納処理（アップデート）
+                    foreach ($noticetypeList as $hoyonoticeinfo) {
+                        if ($cooperationModel->updateHoyoNoticescheduleRegistId($registration, 
+                                                                                $deceasedId, 
+                                                                                $hoyonoticeinfo['noticetype'], 
+                                                                                date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                                {
+                        }else{
+                            //データ更新に失敗した場合
+                            echo '';
+                            break;
+                        }
+
+                    } 
+                }else{
+                //法要スケジュール（初七日）未登録の場合
+                    //法要スケジュールをＤＢに格納処理（インサート） 
+                    foreach ($noticetypeList as $hoyonoticeinfo) {
+                        if ($cooperationModel->insertHoyoNoticescheduleRegistId($registration, 
+                                                                                $deceasedId, 
+                                                                                $hoyonoticeinfo['noticetype'], 
+                                                                                date("Ymd",strtotime($deceasedDeathday . $hoyonoticeinfo['pushtime']))))
+                                                                                {
+                        }else{
+                            //データ格納に失敗した場合
+                            echo '';
+                            break;
+                        }
+
+                    } 
                 }
+
 
             }
         }
